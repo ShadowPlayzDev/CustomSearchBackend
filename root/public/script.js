@@ -201,17 +201,17 @@ fetch('https://cdn.jsdelivr.net/gh/ShadowPlayzDev/CustomSearchBackend@main/root/
         updateURL();
     });
 
-    function updateURL(){
-        const newUrl = new URL(window.location.href);
-        newUrl.searchParams.set("t", config.theme);
-        newUrl.searchParams.set("se", config.searchEngine);
-        newUrl.searchParams.set("sp", config.searchPlaceholder);
-        newUrl.searchParams.set("bt", config.searchButtonText);
-        newUrl.searchParams.set("l", config.logoUrl);
-        if (config.centeredLogo) {
-            newUrl.searchParams.set("lp", "c");
-        } else {
-            newUrl.searchParams.delete("lp");
-        }
+function updateURL(){
+    const newUrl = new URL(window.location.href);
+    newUrl.searchParams.set("t", config.theme);
+    newUrl.searchParams.set("se", config.searchEngine);
+    newUrl.searchParams.set("sp", config.searchPlaceholder);
+    newUrl.searchParams.set("bt", config.searchButtonText);
+    newUrl.searchParams.set("l", config.logoUrl);
+
+    if (config.centeredLogo) {
+        newUrl.searchParams.set("lp", "c"); // "c" for centered
+    } else {
+        newUrl.searchParams.set("lp", "d"); // "d" for default
     }
-})
+}
