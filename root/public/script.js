@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let config;
 
-    fetch('/config.json')
+    fetch('config.json')
         .then(response => response.json())
         .then(data => {
             config = data;
