@@ -36,16 +36,16 @@ document.addEventListener('DOMContentLoaded', () => {
         centeredLogo: false,
     };
 
-    fetch('config.json')
-        .then(response => response.json())
-        .then(data => {
-            config = data;
-            applyConfig();
-        })
-        .catch(error => {
-            console.error('Error loading config.json:', error);
-            applyConfig();
-        });
+fetch('https://cdn.jsdelivr.net/gh/ShadowPlayzDev/CustomSearchBackend@main/root/public/config.json')
+    .then(response => response.json())
+    .then(data => {
+        config = data;
+        applyConfig();
+    })
+    .catch(error => {
+        console.error('Error loading config.json:', error);
+        applyConfig();
+    });
 
     function applyConfig() {
         greetingElement.textContent = config.greeting;
