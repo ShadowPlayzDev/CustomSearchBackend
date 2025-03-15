@@ -1,0 +1,20 @@
+{
+    "greeting": "Welcome!",
+    "links": [
+        { "name": "Google", "url": "https://www.google.com", "icon": "m:search" },
+        { "name": "GitHub", "url": "https://github.com", "icon": "m:code" },
+        { "name": "YouTube", "url": "https://www.youtube.com", "icon": "l:https://iconhub.com/icon/youtube" }
+    ],
+    "searchEngines": [
+        "https://www.google.com/search?q=",
+        "https://www.bing.com/search?q=",
+        "https://duckduckgo.com/?q=",
+        "https://yandex.com/search/?text="
+    ],
+    "theme": 0,
+    "searchEngine": 0,
+    "searchPlaceholder": "Search...",
+    "searchButtonText": "Go",
+    "logoUrl": "/img/logo.png",
+    "centeredLogo": false
+}
