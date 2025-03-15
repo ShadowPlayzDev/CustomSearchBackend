@@ -212,3 +212,4 @@ fetch('https://cdn.jsdelivr.net/gh/ShadowPlayzDev/CustomSearchBackend@main/root/
             newUrl.searchParams.set("l", "c");
         } else {
             newUrl.searchParams.delete("l");
+        }
