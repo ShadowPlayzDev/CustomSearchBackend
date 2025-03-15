@@ -214,4 +214,4 @@ fetch('https://cdn.jsdelivr.net/gh/ShadowPlayzDev/CustomSearchBackend@main/root/
             newUrl.searchParams.delete("lp");
         }
     }
-}
+)
