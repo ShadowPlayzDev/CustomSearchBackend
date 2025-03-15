@@ -209,9 +209,9 @@ fetch('https://cdn.jsdelivr.net/gh/ShadowPlayzDev/CustomSearchBackend@main/root/
         newUrl.searchParams.set("bt", config.searchButtonText);
         newUrl.searchParams.set("l", config.logoUrl);
         if (config.centeredLogo) {
-            newUrl.searchParams.set("l", "c");
+            newUrl.searchParams.set("lp", "c");
         } else {
-            newUrl.searchParams.delete("l");
+            newUrl.searchParams.delete("lp");
         }
     }
 }
