@@ -18,19 +18,25 @@ document.addEventListener('DOMContentLoaded', () => {
     let config;
 
     fetch('config.json')
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to load config.json');
+            }
+            return response.json();
+        })
         .then(data => {
             config = data;
             applyConfig();
         })
         .catch(error => {
             console.error('Error loading config.json:', error);
+            // Fallback to the default JS config if the fetch fails
             config = {
                 greeting: 'Welcome!',
                 links: [
-                    { name: 'Google', url: 'https://www.google.com', "icon": "m:search" },
-                    { name: 'GitHub', url: 'https://github.com', "icon": "l:https://github.githubassets.com/favicons/favicon-dark.png" },
-                    { name: "Youtube", url: "https://www.youtube.com", "icon": "l:https://cdn.jsdelivr.net/gh/ShadowPlayzDev/CustomSearchBackend@main/root/public/img/yt-icon.png" }
+                    { name: 'Google', url: 'https://www.google.com', icon: 'm:search' },
+                    { name: 'GitHub', url: 'https://github.com', icon: 'l:https://github.githubassets.com/favicons/favicon-dark.png' },
+                    { name: 'Youtube', url: 'https://www.youtube.com', icon: 'l:https://cdn.jsdelivr.net/gh/ShadowPlayzDev/CustomSearchBackend@main/root/public/img/yt-icon.png' }
                 ],
                 searchEngines: [
                     'https://www.google.com/search?q=',
@@ -45,7 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 logoUrl: '/img/logo.png',
                 centeredLogo: false,
             };
-            applyConfig();
+            applyConfig(); // Apply the default configuration
         });
 
     function applyConfig() {
