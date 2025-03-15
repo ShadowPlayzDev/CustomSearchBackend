@@ -15,39 +15,42 @@ document.addEventListener('DOMContentLoaded', () => {
     const logoElement = document.getElementById("logo");
     const addLinkHeaderButton = document.getElementById("add-link-header");
 
-    let config = {
-        greeting: 'Welcome!',
-        links: [
-            { name: 'Google', url: 'https://www.google.com', "icon": "m:search"},
-            { name: 'GitHub', url: 'https://github.com', "icon": "m:code" },
-            { name: "Youtube", url: "https://www.youtube.com", "icon": "l:https://iconhub.com/icon/youtube"}
-        ],
-        searchEngines: [
-            'https://www.google.com/search?q=',
-            'https://www.bing.com/search?q=',
-            'https://duckduckgo.com/?q=',
-            'https://yandex.com/search/?text='
-        ],
-        theme: 0,
-        searchEngine: 0,
-        searchPlaceholder: 'Search...',
-        searchButtonText: 'Go',
-        logoUrl: '/img/logo.png',
-        centeredLogo: false,
-    };
+    let config;
 
-fetch('https://cdn.jsdelivr.net/gh/ShadowPlayzDev/CustomSearchBackend@main/root/public/config.json')
-    .then(response => response.json())
-    .then(data => {
-        config = data;
-        applyConfig();
-    })
-    .catch(error => {
-        console.error('Error loading config.json:', error);
-        applyConfig();
-    });
+    fetch('/config.json')
+        .then(response => response.json())
+        .then(data => {
+            config = data;
+            applyConfig();
+        })
+        .catch(error => {
+            console.error('Error loading config.json:', error);
+            config = {
+                greeting: 'Welcome!',
+                links: [
+                    { name: 'Google', url: 'https://www.google.com', "icon": "m:search" },
+                    { name: 'GitHub', url: 'https://github.com', "icon": "m:code" },
+                    { name: "Youtube", url: "https://www.youtube.com", "icon": "l:https://iconhub.com/icon/youtube" }
+                ],
+                searchEngines: [
+                    'https://www.google.com/search?q=',
+                    'https://www.bing.com/search?q=',
+                    'https://duckduckgo.com/?q=',
+                    'https://yandex.com/search/?text='
+                ],
+                theme: 0,
+                searchEngine: 0,
+                searchPlaceholder: 'Search...',
+                searchButtonText: 'Go',
+                logoUrl: '/img/logo.png',
+                centeredLogo: false,
+            };
+            applyConfig();
+        });
 
     function applyConfig() {
+        if (!config) return;
+
         greetingElement.textContent = config.greeting;
 
         linksElement.innerHTML = '';
@@ -109,49 +112,22 @@ fetch('https://cdn.jsdelivr.net/gh/ShadowPlayzDev/CustomSearchBackend@main/root/
             document.body.classList.remove('centered-logo-layout');
         }
     }
-function loadSettingsFromUrlParams() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const themeParam = urlParams.get('t');
-    const searchEngineParam = urlParams.get('se');
-    const placeholderParam = urlParams.get('sp');
-    const buttonTextParam = urlParams.get('bt');
-    const logoParam = urlParams.get('l');
-    const centeredLogoParam = urlParams.get('lp'); // Corrected line here
 
-    if (themeParam !== null && !isNaN(themeParam)) {
-        const theme = parseInt(themeParam, 10);
-        if (theme === 0 || theme === 1) {
-            config.theme = theme;
+    function loadSettingsFromUrlParams() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const themeParam = urlParams.get('t');
+        const searchEngineParam = urlParams.get('se');
+        const placeholderParam = urlParams.get('sp');
+        const buttonTextParam = urlParams.get('bt');
+        const logoParam = urlParams.get('l');
+        const centeredLogoParam = urlParams.get('lp');
+
+        if (themeParam !== null && !isNaN(themeParam)) {
+            const theme = parseInt(themeParam, 10);
+            if (theme === 0 || theme === 1) {
+                config.theme = theme;
+            }
         }
-    }
-
-    if (searchEngineParam !== null && !isNaN(searchEngineParam)) {
-        const searchEngine = parseInt(searchEngineParam, 10);
-        if (searchEngine >= 0 && searchEngine < config.searchEngines.length) {
-            config.searchEngine = searchEngine;
-        }
-    }
-
-    if (placeholderParam !== null) {
-        config.searchPlaceholder = placeholderParam;
-    }
-
-    if (buttonTextParam !== null) {
-        config.searchButtonText = buttonTextParam;
-    }
-
-    if(logoParam !== null){
-        config.logoUrl = logoParam;
-    }
-
-    if (centeredLogoParam === 'c') {
-        config.centeredLogo = true;
-    } else {
-        config.centeredLogo = false;
-    }
-
-    applyConfig();
-}
 
         if (searchEngineParam !== null && !isNaN(searchEngineParam)) {
             const searchEngine = parseInt(searchEngineParam, 10);
@@ -168,7 +144,7 @@ function loadSettingsFromUrlParams() {
             config.searchButtonText = buttonTextParam;
         }
 
-        if(logoParam !== null){
+        if (logoParam !== null) {
             config.logoUrl = logoParam;
         }
 
@@ -190,16 +166,16 @@ function loadSettingsFromUrlParams() {
         }
     });
 
-function updateClock() {
-    const now = new Date();
-    let hours = now.getHours();
-    const minutes = now.getMinutes();
-    const ampm = hours >= 12 ? 'PM' : 'AM';
-    hours %= 12;
-    hours = hours ? hours : 12;
-    const timeString = `<span class="math-inline">${hours}\:</span>${minutes.toString().padStart(2, '0')} ${ampm}`; // Corrected line
-    clockElement.textContent = timeString;
-}
+    function updateClock() {
+        const now = new Date();
+        let hours = now.getHours();
+        const minutes = now.getMinutes();
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        hours %= 12;
+        hours = hours ? hours : 12;
+        const timeString = `${hours}:${minutes.toString().padStart(2, '0')} ${ampm}`;
+        clockElement.textContent = timeString;
+    }
 
     updateClock();
     setInterval(updateClock, 1000);
@@ -217,6 +193,8 @@ function updateClock() {
     });
 
     applySettingsButton.addEventListener('click', () => {
+        if (!config) return;
+
         config.theme = parseInt(themeSelect.value, 10);
         config.searchEngine = parseInt(searchEngineSelect.value, 10);
         config.searchPlaceholder = searchPlaceholderInput.value;
@@ -228,17 +206,15 @@ function updateClock() {
         updateURL();
     });
 
-function updateURL(){
-    const newUrl = new URL(window.location.href);
-    newUrl.searchParams.set("t", config.theme);
-    newUrl.searchParams.set("se", config.searchEngine);
-    newUrl.searchParams.set("sp", config.searchPlaceholder);
-    newUrl.searchParams.set("bt", config.searchButtonText);
-    newUrl.searchParams.set("l", config.logoUrl);
+    function updateURL() {
+        if (!config) return;
 
-    if (config.centeredLogo) {
-        newUrl.searchParams.set("lp", "c"); // "c" for centered
-    } else {
-        newUrl.searchParams.set("lp", "d"); // "d" for default
+        const newUrl = new URL(window.location.href);
+        newUrl.searchParams.set("t", config.theme);
+        newUrl.searchParams.set("se", config.searchEngine);
+        newUrl.searchParams.set("sp", config.searchPlaceholder);
+        newUrl.searchParams.set("bt", config.searchButtonText);
+        newUrl.searchParams.set("l", config.logoUrl);
+        window.history.replaceState({}, '', newUrl);
     }
-}
+});
