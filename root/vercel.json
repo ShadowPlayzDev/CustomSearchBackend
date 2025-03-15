@@ -1,1 +1,6 @@
-
+{
+    "rewrites": [
+        { "source": "/", "destination": "/root/public/index.html" },
+        { "source": "/img/logo", "destination": "/root/public/img/logo.png" }
+    ]
+}
