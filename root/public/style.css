@@ -34,7 +34,7 @@ body.dark-mode #header {
 }
 
 #settings-toggle {
-    display: flex; /* Use flex to ensure full button coverage */
+    display: flex; 
     align-items: center;
     justify-content: center;
     font-size: 24px;
@@ -42,9 +42,9 @@ body.dark-mode #header {
     border: none;
     cursor: pointer;
     color: #555;
-    padding: 10px; /* Uniform padding */
-    min-width: 44px; /* Minimum width for touch targets */
-    min-height: 44px; /* Minimum height for touch targets */
+    padding: 10px; 
+    min-width: 44px; 
+    min-height: 44px; 
 }
 
 body.dark-mode #settings-toggle {
@@ -116,118 +116,33 @@ body.dark-mode #settings-toggle {
     opacity: 1;
 }
 
-body.dark-mode #settings-sidebar {
-    background-color: #3a3a3a;
-}
-
-#settings-sidebar h2 {
+.settings-box {
     margin-bottom: 20px;
-    color: #333;
-    font-size: 1.5em;
 }
 
-#settings-sidebar label {
+.settings-box label {
     display: block;
-    margin-bottom: 5px;
-    color: #555;
+    margin-bottom: 8px;
+    font-weight: bold;
 }
 
-#settings-sidebar input,
-#settings-sidebar select,
-#settings-sidebar button {
-    width: calc(100% - 22px);
+.settings-box input,
+.settings-box select {
+    width: 100%;
     padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 1em;
+    border: 1px solid #ccc;
+    border-radius: 8px;
 }
 
-#settings-sidebar button {
-    background-color: #007bff;
+button#applySettings {
+    background-color: #28a745;
     color: white;
+    padding: 10px 20px;
     border: none;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-#settings-sidebar button:hover {
-    background-color: #0056b3;
-}
-
-.centered-logo-layout #content {
-    flex-direction: column;
-    justify-content: center;
-}
-
-.centered-logo-layout #logo {
-    margin-bottom: 20px;
-}
-
-.centered-logo-layout #search {
-    margin-top: 0;
-}
-
-.centered-logo-layout #clock {
-    margin-top: 20px;
-}
-
-#links {
-    display: flex;
-    flex-wrap: wrap; /* Allow links to wrap to the next line */
-    justify-content: center; /* Center links horizontally */
-    margin-top: 20px;
-}
-
-#links a {
-    display: flex;
-    flex-direction: column; /* Stack icon and text vertically */
-    align-items: center; /* Center icon and text horizontally */
-    margin: 5px;
-    padding: 10px 15px;
-    border: 1px solid #ccc;
     border-radius: 8px;
-    text-decoration: none;
-    color: #333;
-    transition: border-color 0.3s;
-}
-
-body.dark-mode #links a {
-    color: #eee;
-    border-color: #666;
-}
-
-#links a:hover {
-    border-color: #007bff; /* Highlight border on hover */
-}
-
-#links a .material-icons {
-    margin-bottom: 5px; /* Space between icon and text */
-}
-
-#add-link {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #f0f0f0;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    padding: 10px 15px;
-    margin: 5px;
     cursor: pointer;
-    transition: border-color 0.3s;
 }
 
-body.dark-mode #add-link {
-    background-color: #444;
-    border-color: #666;
-    color: #eee;
-}
-
-#add-link:hover {
-    border-color: #007bff;
-}
-
-#add-link .material-icons {
-    margin: 0; /* Remove margin from icon */
+button#applySettings:hover {
+    background-color: #218838;
 }
