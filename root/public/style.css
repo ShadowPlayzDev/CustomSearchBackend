@@ -146,3 +146,48 @@ button#applySettings {
 button#applySettings:hover {
     background-color: #218838;
 }
+
+/* Ensure that icons inside links are properly sized */
+.link-icon {
+    max-height: 40px; /* Adjust this to whatever height fits your design */
+    width: auto; /* This ensures the aspect ratio of the icon remains intact */
+}
+
+/* YouTube specific icon */
+.link-icon[src*="yt-icon"] {
+    max-height: 40px; /* Adjust this to your preferred height */
+    width: auto;
+}
+
+/* Optional: Styling for the links in the list */
+#links a {
+    display: flex;
+    align-items: center;
+    margin: 10px;
+    padding: 8px;
+    background-color: #f8f8f8;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #333;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+#links a:hover {
+    background-color: #f0f0f0;
+}
+
+#links a .material-icons,
+#links a .link-icon {
+    margin-right: 10px;
+}
+
+/* Dark mode links */
+body.dark-mode #links a {
+    background-color: #444;
+    color: #eee;
+}
+
+body.dark-mode #links a:hover {
+    background-color: #333;
+}
