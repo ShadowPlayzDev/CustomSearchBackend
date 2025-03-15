@@ -109,22 +109,49 @@ fetch('https://cdn.jsdelivr.net/gh/ShadowPlayzDev/CustomSearchBackend@main/root/
             document.body.classList.remove('centered-logo-layout');
         }
     }
+function loadSettingsFromUrlParams() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const themeParam = urlParams.get('t');
+    const searchEngineParam = urlParams.get('se');
+    const placeholderParam = urlParams.get('sp');
+    const buttonTextParam = urlParams.get('bt');
+    const logoParam = urlParams.get('l');
+    const centeredLogoParam = urlParams.get('lp'); // Corrected line here
 
-    function loadSettingsFromUrlParams() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const themeParam = urlParams.get('t');
-        const searchEngineParam = urlParams.get('se');
-        const placeholderParam = urlParams.get('sp');
-        const buttonTextParam = urlParams.get('bt');
-        const logoParam = urlParams.get('l');
-        const centeredLogoParam = urlParams.get('l');
-
-        if (themeParam !== null && !isNaN(themeParam)) {
-            const theme = parseInt(themeParam, 10);
-            if (theme === 0 || theme === 1) {
-                config.theme = theme;
-            }
+    if (themeParam !== null && !isNaN(themeParam)) {
+        const theme = parseInt(themeParam, 10);
+        if (theme === 0 || theme === 1) {
+            config.theme = theme;
         }
+    }
+
+    if (searchEngineParam !== null && !isNaN(searchEngineParam)) {
+        const searchEngine = parseInt(searchEngineParam, 10);
+        if (searchEngine >= 0 && searchEngine < config.searchEngines.length) {
+            config.searchEngine = searchEngine;
+        }
+    }
+
+    if (placeholderParam !== null) {
+        config.searchPlaceholder = placeholderParam;
+    }
+
+    if (buttonTextParam !== null) {
+        config.searchButtonText = buttonTextParam;
+    }
+
+    if(logoParam !== null){
+        config.logoUrl = logoParam;
+    }
+
+    if (centeredLogoParam === 'c') {
+        config.centeredLogo = true;
+    } else {
+        config.centeredLogo = false;
+    }
+
+    applyConfig();
+}
 
         if (searchEngineParam !== null && !isNaN(searchEngineParam)) {
             const searchEngine = parseInt(searchEngineParam, 10);
