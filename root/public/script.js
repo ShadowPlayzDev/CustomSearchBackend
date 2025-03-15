@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 links: [
                     { name: 'Google', url: 'https://www.google.com', icon: 'm:search' },
                     { name: 'GitHub', url: 'https://github.com', icon: 'l:https://github.githubassets.com/favicons/favicon-dark.png' },
-                    { name: 'Youtube', url: 'https://www.youtube.com', icon: 'l:https://cdn.jsdelivr.net/gh/ShadowPlayzDev/CustomSearchBackend@main/root/public/img/yt-icon.png' }
+                    { name: 'Youtube', url: 'https://www.youtube.com', icon: 'l:https://www.youtube.com/s/desktop/ee47b5e0/img/logos/favicon.ico }
                 ],
                 searchEngines: [
                     'https://www.google.com/search?q=',
