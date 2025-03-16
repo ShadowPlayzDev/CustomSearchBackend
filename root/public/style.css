@@ -1,3 +1,10 @@
+/* Basic Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body {
     font-family: sans-serif;
     margin: 0;
@@ -5,97 +12,95 @@ body {
     flex-direction: column;
     height: 100vh;
     background-color: #f0f0f0;
-    transition: background-color 0.3s, color 0.3s;
+    transition: background-color 0.3s, color 0.3s, background-image 0.3s;
 }
 
-body.dark-mode {
+/* Light Theme */
+body.theme-light {
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+body.theme-dark {
     background-color: #333;
     color: #eee;
 }
 
-#header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    padding-right: 5px;
-    background-color: #e0e0e0;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+body.theme-custom {
+    background-image: url(''); /* Dynamically set via JS */
+    background-size: cover;
+    color: #fff;
 }
 
-body.dark-mode #header {
-    background-color: #444;
-}
-
-#logo {
-    padding-left: 5px;
-    height: 40px;
-}
-
-#settings-toggle {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: #555;
-    padding: 10px;
-    min-width: 44px;
-    min-height: 44px;
-}
-
-body.dark-mode #settings-toggle {
-    color: #bbb;
-}
-
-#content {
+/* Greeting Section */
+#greeting-container {
     text-align: center;
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    padding: 20px;
 }
 
-#search {
-    display: flex;
+#greeting {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+/* Links Section */
+#links-container {
+    text-align: center;
     margin-top: 20px;
-    width: 80%;
-    max-width: 600px;
+}
+
+#links a {
+    margin: 10px;
+    text-decoration: none;
+    color: inherit;
+    font-size: 1.2rem;
+    display: inline-block;
+}
+
+#links a i {
+    margin-right: 8px;
+}
+
+/* Search Section */
+#search-container {
+    text-align: center;
+    margin-top: 20px;
 }
 
 #searchInput {
-    flex-grow: 1;
-    padding: 12px 16px;
-    border: 1px solid #ccc;
-    border-radius: 8px 0 0 8px;
-    font-size: 16px;
-    outline: none;
+    padding: 10px;
+    font-size: 1rem;
+    width: 200px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    margin-right: 10px;
 }
 
 #searchButton {
-    padding: 12px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 0 8px 8px 0;
+    padding: 10px 20px;
+    font-size: 1rem;
     cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
 }
 
 #searchButton:hover {
     background-color: #0056b3;
 }
 
-#clock {
+/* Clock Widget */
+#clock-widget {
+    text-align: center;
     margin-top: 20px;
-    font-size: 2em;
 }
 
+#clock {
+    font-size: 1.5rem;
+}
+
+/* Settings Sidebar */
 #settings-sidebar {
     position: fixed;
     top: 0;
@@ -134,6 +139,7 @@ body.dark-mode #settings-toggle {
     border-radius: 8px;
 }
 
+/* Apply Settings Button */
 button#applySettings {
     background-color: #28a745;
     color: white;
@@ -147,6 +153,7 @@ button#applySettings:hover {
     background-color: #218838;
 }
 
+/* Link Styles */
 .link-icon {
     max-height: 40px;
     width: auto;
@@ -174,6 +181,7 @@ button#applySettings:hover {
     margin-right: 10px;
 }
 
+/* Dark Mode Styling */
 body.dark-mode #links a {
     background-color: #444;
     color: #eee;
@@ -183,11 +191,62 @@ body.dark-mode #links a:hover {
     background-color: #333;
 }
 
+/* Widgets - Clock, Weather, Spotify */
+#clock-widget {
+    text-align: center;
+    margin-top: 20px;
+}
+
+#weather-widget {
+    text-align: center;
+    margin-top: 20px;
+}
+
+#spotify-widget {
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* Custom Widgets - Controlled via URL */
+#clock-widget.hidden,
+#weather-widget.hidden,
+#spotify-widget.hidden {
+    display: none;
+}
+
+/* Settings Section (Widget Toggles) */
 .settings-section {
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
 
 .settings-section label {
     display: block;
-    margin-bottom: 5px;
+    margin-bottom: 8px;
+}
+
+/* Widget Toggles - Checkboxes */
+.settings-section input[type="checkbox"] {
+    margin-right: 8px;
+}
+
+/* Custom Background */
+body.theme-custom {
+    background-size: cover;
+    color: white;
+}
+
+/* Additional Media Queries */
+@media (max-width: 768px) {
+    #header {
+        flex-direction: column;
+    }
+
+    #search {
+        width: 100%;
+    }
+
+    .settings-box input,
+    .settings-box select {
+        width: 100%;
+    }
 }
