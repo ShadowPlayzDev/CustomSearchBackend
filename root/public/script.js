@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const clockToggle = document.getElementById('clock-toggle');
     const weatherToggle = document.getElementById('weather-toggle');
     const spotifyToggle = document.getElementById('spotify-toggle');
+    const widgetSection = document.getElementById('widget-section');
 
     let config;
 
@@ -114,8 +115,14 @@ document.addEventListener('DOMContentLoaded', () => {
         // Apply theme
         if (config.theme === 1) {
             document.body.classList.add('dark-mode');
+        } else if (config.theme === 2) {
+            document.body.classList.add('custom-theme');
+            // Apply custom theme settings
+            if (config.bgImage) document.body.style.backgroundImage = `url(${config.bgImage})`;
+            if (config.headerColor) document.body.style.setProperty('--header-color', config.headerColor);
         } else {
             document.body.classList.remove('dark-mode');
+            document.body.classList.remove('custom-theme');
         }
 
         // Apply other settings
@@ -146,46 +153,10 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-        // Toggle visibility of widgets based on checkbox status
-        if (clockToggle) {
-            clockToggle.addEventListener('change', () => {
-                if (clockElement) {
-                    clockElement.style.display = clockToggle.checked ? 'block' : 'none';
-                }
-            });
-            // Set initial state based on config or default
-            clockElement.style.display = clockToggle.checked ? 'block' : 'none';
-        }
-
-        // Assuming weather and Spotify widgets are defined elsewhere in your HTML.
-        // Handle visibility for weather and Spotify similarly
-        if (weatherToggle) {
-            weatherToggle.addEventListener('change', () => {
-                const weatherWidget = document.getElementById('weather-widget'); // Replace with actual weather widget id
-                if (weatherWidget) {
-                    weatherWidget.style.display = weatherToggle.checked ? 'block' : 'none';
-                }
-            });
-            // Set initial state for weather widget
-            const weatherWidget = document.getElementById('weather-widget');
-            if (weatherWidget) {
-                weatherWidget.style.display = weatherToggle.checked ? 'block' : 'none';
-            }
-        }
-
-        if (spotifyToggle) {
-            spotifyToggle.addEventListener('change', () => {
-                const spotifyWidget = document.getElementById('spotify-widget'); // Replace with actual Spotify widget id
-                if (spotifyWidget) {
-                    spotifyWidget.style.display = spotifyToggle.checked ? 'block' : 'none';
-                }
-            });
-            // Set initial state for Spotify widget
-            const spotifyWidget = document.getElementById('spotify-widget');
-            if (spotifyWidget) {
-                spotifyWidget.style.display = spotifyToggle.checked ? 'block' : 'none';
-            }
-        }
+        // Widget visibility control via URL params
+        if (clockToggle && config.clockVisible) clockToggle.checked = true;
+        if (weatherToggle && config.weatherVisible) weatherToggle.checked = true;
+        if (spotifyToggle && config.spotifyVisible) spotifyToggle.checked = true;
     }
 
     // Load settings from URL params
@@ -196,19 +167,20 @@ document.addEventListener('DOMContentLoaded', () => {
         const placeholderParam = urlParams.get('sp');
         const buttonTextParam = urlParams.get('bt');
         const logoParam = urlParams.get('l');
+        const bgParam = urlParams.get('bg');
+        const hcParam = urlParams.get('hc');
+        const greetingParam = urlParams.get('g');
+        const customGreeting = urlParams.get('cg');
+        const clockToggleParam = urlParams.get('clock-toggle');
+        const weatherToggleParam = urlParams.get('weather-toggle');
+        const spotifyToggleParam = urlParams.get('spotify-toggle');
 
         if (themeParam !== null && !isNaN(themeParam)) {
-            const theme = parseInt(themeParam, 10);
-            if (theme === 0 || theme === 1) {
-                config.theme = theme;
-            }
+            config.theme = parseInt(themeParam, 10);
         }
 
         if (searchEngineParam !== null && !isNaN(searchEngineParam)) {
-            const searchEngine = parseInt(searchEngineParam, 10);
-            if (searchEngine >= 0 && searchEngine < config.searchEngines.length) {
-                config.searchEngine = searchEngine;
-            }
+            config.searchEngine = parseInt(searchEngineParam, 10);
         }
 
         if (placeholderParam !== null) {
@@ -222,6 +194,35 @@ document.addEventListener('DOMContentLoaded', () => {
         if (logoParam !== null) {
             config.logoUrl = logoParam;
         }
+
+        if (bgParam !== null) {
+            config.bgImage = bgParam;
+        }
+
+        if (hcParam !== null) {
+            config.headerColor = hcParam;
+        }
+
+        if (greetingParam !== null) {
+            config.greeting = greetingParam;
+        }
+
+        if (customGreeting !== null) {
+            config.greeting = customGreeting;
+        }
+
+        if (clockToggleParam !== null) {
+            config.clockVisible = clockToggleParam === 'true';
+        }
+
+        if (weatherToggleParam !== null) {
+            config.weatherVisible = weatherToggleParam === 'true';
+        }
+
+        if (spotifyToggleParam !== null) {
+            config.spotifyVisible = spotifyToggleParam === 'true';
+        }
+
         applyConfig();
     }
 
@@ -290,6 +291,8 @@ document.addEventListener('DOMContentLoaded', () => {
         newUrl.searchParams.set("sp", config.searchPlaceholder);
         newUrl.searchParams.set("bt", config.searchButtonText);
         newUrl.searchParams.set("l", config.logoUrl);
+        if (config.bgImage) newUrl.searchParams.set("bg", config.bgImage);
+        if (config.headerColor) newUrl.searchParams.set("hc", config.headerColor);
         window.history.replaceState({}, '', newUrl);
     }
 });
