@@ -16,6 +16,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const addLinkHeaderButton = document.getElementById("add-link-header");
 
     let config;
+
+    // Load configuration from file
     fetch('config.json')
         .then(response => {
             if (!response.ok) {
@@ -29,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .catch(error => {
             console.error('Error loading config.json:', error);
-            // Fallback to the default JS config if the fetch fails
+            alert("Error loading configuration, using Default Configuration.")
             config = {
                 greeting: 'Welcome!',
                 links: [
@@ -53,78 +55,38 @@ document.addEventListener('DOMContentLoaded', () => {
             applyConfig(); // Apply the default configuration
         });
 
-function applyConfig() {
-    if (!config) return;
+    function applyConfig() {
+        if (!config) return;
 
-    greetingElement.textContent = config.greeting;
+        greetingElement.textContent = config.greeting;
 
-    linksElement.innerHTML = ''; // Clear the previous links
-    config.links.forEach(link => {
-        const a = document.createElement('a');
-        a.href = link.url;
-        let iconHtml = '';
+        // Clear and render links
+        linksElement.innerHTML = '';
+        config.links.forEach(link => {
+            const a = document.createElement('a');
+            a.href = link.url;
+            let iconHtml = '';
 
-        // Handle Material icons
-        if (link.icon && link.icon.startsWith('m:')) {
-            const iconName = link.icon.substring(2);  // Remove 'm:' from the icon name
-            iconHtml = `<i class="material-icons">${iconName}</i>`;
-        } 
-        // Handle Link-based icons (image URLs)
-        else if (link.icon && link.icon.startsWith('l:')) {
-            const iconUrl = link.icon.substring(2);  // Remove 'l:' from the link
-            iconHtml = `<img src="${iconUrl}" alt="Link Icon" class="link-icon">`;
-        } 
-        // Default to a generic link icon
-        else {
-            iconHtml = '<i class="material-icons">link</i>';
-        }
+            // Handle Material icons
+            if (link.icon && link.icon.startsWith('m:')) {
+                const iconName = link.icon.substring(2);  // Remove 'm:' from the icon name
+                iconHtml = `<i class="material-icons">${iconName}</i>`;
+            } 
+            // Handle Link-based icons (image URLs)
+            else if (link.icon && link.icon.startsWith('l:')) {
+                const iconUrl = link.icon.substring(2);  // Remove 'l:' from the link
+                iconHtml = `<img src="${iconUrl}" alt="Link Icon" class="link-icon">`;
+            } 
+            // Default to a generic link icon
+            else {
+                iconHtml = '<i class="material-icons">link</i>';
+            }
 
-        a.innerHTML = `${iconHtml} ${link.name}`;
-        linksElement.appendChild(a);
-    });
+            a.innerHTML = `${iconHtml} ${link.name}`;
+            linksElement.appendChild(a);
+        });
 
-    // Add a button to add new links
-    const addButton = document.createElement('button');
-    addButton.id = 'add-link';
-    addButton.innerHTML = '<i class="material-icons">add_link</i>';
-    linksElement.appendChild(addButton);
-
-    addButton.addEventListener('click', () => {
-        const newLinkName = prompt('Enter link name:');
-        const newLinkUrl = prompt('Enter link URL:');
-        const newLinkIcon = prompt('Enter link icon (m:material or l:url):');
-
-        if (newLinkName && newLinkUrl) {
-            config.links.push({ name: newLinkName, url: newLinkUrl, icon: newLinkIcon || 'm:link' });
-            applyConfig();
-            updateURL();
-        }
-    });
-
-    // Apply theme
-    if (config.theme === 1) {
-        document.body.classList.add('dark-mode');
-    } else {
-        document.body.classList.remove('dark-mode');
-    }
-
-    // Apply other settings
-    searchInput.placeholder = config.searchPlaceholder;
-    searchButton.textContent = config.searchButtonText;
-    logoElement.src = config.logoUrl;
-
-    themeSelect.value = config.theme;
-    searchEngineSelect.value = config.searchEngine;
-    searchPlaceholderInput.value = config.searchPlaceholder;
-    searchButtonTextInput.value = config.searchButtonText;
-    logoInput.value = config.logoUrl;
-
-    if (config.centeredLogo) {
-        document.body.classList.add('centered-logo-layout');
-    } else {
-        document.body.classList.remove('centered-logo-layout');
-    }
-}
+        // Add a button to add new links
         const addButton = document.createElement('button');
         addButton.id = 'add-link';
         addButton.innerHTML = '<i class="material-icons">add_link</i>';
@@ -142,12 +104,10 @@ function applyConfig() {
             }
         });
 
-        if (config.theme === 1) {
-            document.body.classList.add('dark-mode');
-        } else {
-            document.body.classList.remove('dark-mode');
-        }
+        // Apply theme
+        document.body.classList.toggle('dark-mode', config.theme === 1);
 
+        // Apply other settings
         searchInput.placeholder = config.searchPlaceholder;
         searchButton.textContent = config.searchButtonText;
         logoElement.src = config.logoUrl;
@@ -158,13 +118,10 @@ function applyConfig() {
         searchButtonTextInput.value = config.searchButtonText;
         logoInput.value = config.logoUrl;
 
-        if (config.centeredLogo) {
-            document.body.classList.add('centered-logo-layout');
-        } else {
-            document.body.classList.remove('centered-logo-layout');
-        }
-    });
+        document.body.classList.toggle('centered-logo-layout', config.centeredLogo);
+    }
 
+    // Load settings from URL parameters
     function loadSettingsFromUrlParams() {
         const urlParams = new URLSearchParams(window.location.search);
         const themeParam = urlParams.get('t');
@@ -211,6 +168,7 @@ function applyConfig() {
 
     loadSettingsFromUrlParams();
 
+    // Handle search
     searchButton.addEventListener('click', () => {
         const query = searchInput.value;
         if (query) {
@@ -218,6 +176,7 @@ function applyConfig() {
         }
     });
 
+    // Update the clock
     function updateClock() {
         const now = new Date();
         let hours = now.getHours();
@@ -232,6 +191,7 @@ function applyConfig() {
     updateClock();
     setInterval(updateClock, 1000);
 
+    // Toggle settings sidebar
     settingsSidebar.classList.remove('open');
 
     settingsToggle.addEventListener('click', () => {
