@@ -14,14 +14,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const logoInput = document.getElementById("logoUrl");
     const logoElement = document.getElementById("logo");
     const addLinkHeaderButton = document.getElementById("add-link-header");
-    const logoAboveSearchDiv = document.getElementById("logoAboveSearchDiv");
-
-    const clockToggle = document.getElementById('clock-toggle');
-    const weatherToggle = document.getElementById('weather-toggle');
-    const spotifyToggle = document.getElementById('spotify-toggle');
+    const logoAboveSearchDiv = document.getElementById("logoAboveSearchDiv"); // This is the variable referencing the div
 
     let config;
 
+    // Fetch configuration from the server
     fetch('config.json')
         .then(response => {
             if (!response.ok) {
@@ -31,10 +28,11 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .then(data => {
             config = data;
-            applyConfig();
+            applyConfig(); // Apply the loaded configuration
         })
         .catch(error => {
             console.error('Error loading config.json:', error);
+            // Fallback to the default JS config if the fetch fails
             config = {
                 greeting: 'Welcome!',
                 links: [
@@ -53,113 +51,100 @@ document.addEventListener('DOMContentLoaded', () => {
                 searchPlaceholder: 'Search...',
                 searchButtonText: 'Go',
                 logoUrl: '/img/logo.png',
-                centeredLogo: false,
-                showClock: true,
-                showWeather: true,
-                showSpotify: true,
             };
-            applyConfig();
+            applyConfig(); // Apply the default configuration
         });
 
+    // Apply the configuration to the page
     function applyConfig() {
         if (!config) return;
 
-        greetingElement.textContent = config.greeting;
+        // Set greeting message
+        if (greetingElement) greetingElement.textContent = config.greeting;
 
-        linksElement.innerHTML = '';
-        config.links.forEach(link => {
-            const a = document.createElement('a');
-            a.href = link.url;
-            let iconHtml = '';
+        // Update links
+        if (linksElement) {
+            linksElement.innerHTML = ''; // Clear the previous links
+            config.links.forEach(link => {
+                const a = document.createElement('a');
+                a.href = link.url;
+                let iconHtml = '';
 
-            if (link.icon && link.icon.startsWith('m:')) {
-                const iconName = link.icon.substring(2);
-                iconHtml = `<i class="material-icons">${iconName}</i>`;
-            } else if (link.icon && link.icon.startsWith('l:')) {
-                const iconUrl = link.icon.substring(2);
-                iconHtml = `<img src="${iconUrl}" alt="Link Icon" class="link-icon">`;
-            } else {
-                iconHtml = '<i class="material-icons">link</i>';
-            }
+                // Handle Material icons
+                if (link.icon && link.icon.startsWith('m:')) {
+                    const iconName = link.icon.substring(2);  // Remove 'm:' from the icon name
+                    iconHtml = `<i class="material-icons">${iconName}</i>`;
+                }
+                // Handle Link-based icons (image URLs)
+                else if (link.icon && link.icon.startsWith('l:')) {
+                    const iconUrl = link.icon.substring(2);  // Remove 'l:' from the link
+                    iconHtml = `<img src="${iconUrl}" alt="Link Icon" class="link-icon">`;
+                }
+                // Default to a generic link icon
+                else {
+                    iconHtml = '<i class="material-icons">link</i>';
+                }
 
-            a.innerHTML = `${iconHtml} ${link.name}`;
-            linksElement.appendChild(a);
-        });
+                a.innerHTML = `${iconHtml} ${link.name}`;
+                linksElement.appendChild(a);
+            });
 
-        const addButton = document.createElement('button');
-        addButton.id = 'add-link';
-        addButton.innerHTML = '<i class="material-icons">add</i>';
-        linksElement.appendChild(addButton);
+            // Add a button to add new links
+            const addButton = document.createElement('button');
+            addButton.id = 'add-link';
+            addButton.innerHTML = '<i class="material-icons">add</i>';
+            linksElement.appendChild(addButton);
 
-        addButton.addEventListener('click', () => {
-            const newLinkName = prompt('Enter link name:');
-            const newLinkUrl = prompt('Enter link URL:');
-            const newLinkIcon = prompt('Enter link icon (m:material or l:url):');
+            addButton.addEventListener('click', () => {
+                const newLinkName = prompt('Enter link name:');
+                const newLinkUrl = prompt('Enter link URL:');
+                const newLinkIcon = prompt('Enter link icon (m:material or l:url):');
 
-            if (newLinkName && newLinkUrl) {
-                config.links.push({ name: newLinkName, url: newLinkUrl, icon: newLinkIcon || 'm:link' });
-                applyConfig();
-                updateURL();
-            }
-        });
+                if (newLinkName && newLinkUrl) {
+                    config.links.push({ name: newLinkName, url: newLinkUrl, icon: newLinkIcon || 'm:link' });
+                    applyConfig();
+                    updateURL();
+                }
+            });
+        }
 
+        // Apply theme
         if (config.theme === 1) {
             document.body.classList.add('dark-mode');
         } else {
             document.body.classList.remove('dark-mode');
         }
 
-        searchInput.placeholder = config.searchPlaceholder;
-        searchButton.textContent = config.searchButtonText;
-        logoElement.src = config.logoUrl;
+        // Apply other settings
+        if (searchInput) searchInput.placeholder = config.searchPlaceholder;
+        if (searchButton) searchButton.textContent = config.searchButtonText;
+        if (logoElement) logoElement.src = config.logoUrl;
 
-        themeSelect.value = config.theme;
-        searchEngineSelect.value = config.searchEngine;
-        searchPlaceholderInput.value = config.searchPlaceholder;
-        searchButtonTextInput.value = config.searchButtonText;
-        logoInput.value = config.logoUrl;
+        if (themeSelect) themeSelect.value = config.theme;
+        if (searchEngineSelect) searchEngineSelect.value = config.searchEngine;
+        if (searchPlaceholderInput) searchPlaceholderInput.value = config.searchPlaceholder;
+        if (searchButtonTextInput) searchButtonTextInput.value = config.searchButtonText;
+        if (logoInput) logoInput.value = config.logoUrl;
 
-        // Widget Toggle Logic
-        if (config.showClock) {
-            clockElement.style.display = 'block';
-        } else {
-            clockElement.style.display = 'none';
+        // Update icon preview when the logo input value changes
+        if (logoInput) {
+            logoInput.addEventListener('input', () => {
+                const logoUrl = logoInput.value;
+                if (logoUrl) {
+                    // Using the variable `logoAboveSearchDiv` to show the icon preview
+                    if (logoAboveSearchDiv) {
+                        logoAboveSearchDiv.innerHTML = `<img src="${logoUrl}" alt="Logo Preview" class="logo-preview">`;
+                    }
+                } else {
+                    if (logoAboveSearchDiv) {
+                        logoAboveSearchDiv.innerHTML = ''; // Clear the preview if no URL is entered
+                    }
+                }
+            });
         }
-
-        const weatherElement = document.getElementById("weather");
-        if(weatherElement){
-          if (config.showWeather) {
-              weatherElement.style.display = 'block';
-          } else {
-              weatherElement.style.display = 'none';
-          }
-        }
-
-        const spotifyElement = document.getElementById("spotify");
-        if(spotifyElement){
-          if (config.showSpotify) {
-              spotifyElement.style.display = 'block';
-          } else {
-              spotifyElement.style.display = 'none';
-          }
-        }
-
-        //Logo Preview
-        logoInput.addEventListener('input', () => {
-            const logoUrl = logoInput.value;
-            if (logoUrl) {
-                logoAboveSearchDiv.innerHTML = `<img src="${logoUrl}" alt="Logo Preview" class="logo-preview">`;
-            } else {
-                logoAboveSearchDiv.innerHTML = '';
-            }
-        });
-
-        //Set Checkbox Values
-        clockToggle.checked = config.showClock;
-        weatherToggle.checked = config.showWeather;
-        spotifyToggle.checked = config.showSpotify;
     }
 
+    // Load settings from URL params
     function loadSettingsFromUrlParams() {
         const urlParams = new URLSearchParams(window.location.search);
         const themeParam = urlParams.get('t');
@@ -167,9 +152,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const placeholderParam = urlParams.get('sp');
         const buttonTextParam = urlParams.get('bt');
         const logoParam = urlParams.get('l');
-        const showClockParam = urlParams.get('sc');
-        const showWeatherParam = urlParams.get('sw');
-        const showSpotifyParam = urlParams.get('ss');
 
         if (themeParam !== null && !isNaN(themeParam)) {
             const theme = parseInt(themeParam, 10);
@@ -196,33 +178,74 @@ document.addEventListener('DOMContentLoaded', () => {
         if (logoParam !== null) {
             config.logoUrl = logoParam;
         }
-
-        if (showClockParam !== null) {
-            config.showClock = showClockParam === 'true';
-        }
-
-        if (showWeatherParam !== null) {
-            config.showWeather = showWeatherParam === 'true';
-        }
-
-        if (showSpotifyParam !== null) {
-            config.showSpotify = showSpotifyParam === 'true';
-        }
-
         applyConfig();
     }
 
     loadSettingsFromUrlParams();
 
-    searchButton.addEventListener('click', () => {
-        const query = searchInput.value;
-        if (query) {
-            window.location.href = config.searchEngines[config.searchEngine] + encodeURIComponent(query);
-        }
-    });
+    if (searchButton) {
+        searchButton.addEventListener('click', () => {
+            const query = searchInput.value;
+            if (query) {
+                window.location.href = config.searchEngines[config.searchEngine] + encodeURIComponent(query);
+            }
+        });
+    }
 
+    // Update clock every second
     function updateClock() {
         const now = new Date();
         let hours = now.getHours();
         const minutes = now.getMinutes();
-        const ampm = hours
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        hours %= 12;
+        hours = hours ? hours : 12;
+        const timeString = `${hours}:${minutes.toString().padStart(2, '0')} ${ampm}`;
+        if (clockElement) clockElement.textContent = timeString;
+    }
+
+    updateClock();
+    setInterval(updateClock, 1000);
+
+    if (settingsSidebar) settingsSidebar.classList.remove('open');
+
+    if (settingsToggle) {
+        settingsToggle.addEventListener('click', () => {
+            if (settingsSidebar) settingsSidebar.classList.toggle('open');
+        });
+    }
+
+    document.addEventListener('click', (event) => {
+        if (settingsSidebar && !settingsSidebar.contains(event.target) && event.target !== settingsToggle && event.target !== addLinkHeaderButton) {
+            if (settingsSidebar) settingsSidebar.classList.remove('open');
+        }
+    });
+
+    if (applySettingsButton) {
+        applySettingsButton.addEventListener('click', () => {
+            if (!config) return;
+
+            config.theme = parseInt(themeSelect.value, 10);
+            config.searchEngine = parseInt(searchEngineSelect.value, 10);
+            config.searchPlaceholder = searchPlaceholderInput.value;
+            config.searchButtonText = searchButtonTextInput.value;
+            config.logoUrl = logoInput.value;
+            applyConfig();
+            if (settingsSidebar) settingsSidebar.classList.remove('open');
+            updateURL();
+        });
+    }
+
+    // Update the URL parameters
+    function updateURL() {
+        if (!config) return;
+
+        const newUrl = new URL(window.location.href);
+        newUrl.searchParams.set("t", config.theme);
+        newUrl.searchParams.set("se", config.searchEngine);
+        newUrl.searchParams.set("sp", config.searchPlaceholder);
+        newUrl.searchParams.set("bt", config.searchButtonText);
+        newUrl.searchParams.set("l", config.logoUrl);
+        window.history.replaceState({}, '', newUrl);
+    }
+});
