@@ -163,7 +163,7 @@ function applyConfig() {
         } else {
             document.body.classList.remove('centered-logo-layout');
         }
-    }
+    });
 
     function loadSettingsFromUrlParams() {
         const urlParams = new URLSearchParams(window.location.search);
