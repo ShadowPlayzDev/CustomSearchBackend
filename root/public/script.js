@@ -48,7 +48,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 searchPlaceholder: 'Search...',
                 searchButtonText: 'Go',
                 logoUrl: '/img/logo.png',
-                centeredLogo: false,
             };
             applyConfig(); // Apply the default configuration
         });
@@ -118,14 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
         searchPlaceholderInput.value = config.searchPlaceholder;
         searchButtonTextInput.value = config.searchButtonText;
         logoInput.value = config.logoUrl;
-
-        if (config.centeredLogo) {
-            document.body.classList.add('centered-logo-layout');
-        } else {
-            document.body.classList.remove('centered-logo-layout');
-        }
-    }
-
+        
     function loadSettingsFromUrlParams() {
         const urlParams = new URLSearchParams(window.location.search);
         const themeParam = urlParams.get('t');
@@ -133,7 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const placeholderParam = urlParams.get('sp');
         const buttonTextParam = urlParams.get('bt');
         const logoParam = urlParams.get('l');
-        const centeredLogoParam = urlParams.get('lp');
+        const logoAboveSearch = urlParams.get('las')
 
         if (themeParam !== null && !isNaN(themeParam)) {
             const theme = parseInt(themeParam, 10);
@@ -160,13 +152,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (logoParam !== null) {
             config.logoUrl = logoParam;
         }
-
-        if (centeredLogoParam === 'c') {
-            config.centeredLogo = true;
-        } else {
-            config.centeredLogo = false;
-        }
-
         applyConfig();
     }
 
@@ -213,7 +198,6 @@ document.addEventListener('DOMContentLoaded', () => {
         config.searchPlaceholder = searchPlaceholderInput.value;
         config.searchButtonText = searchButtonTextInput.value;
         config.logoUrl = logoInput.value;
-        config.centeredLogo = document.body.classList.contains('centered-logo-layout');
         applyConfig();
         settingsSidebar.classList.remove('open');
         updateURL();
