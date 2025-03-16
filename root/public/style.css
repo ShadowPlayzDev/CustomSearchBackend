@@ -146,19 +146,10 @@ button#applySettings {
 button#applySettings:hover {
     background-color: #218838;
 }
-
-/* Ensure that icons inside links are properly sized */
 .link-icon {
-    max-height: 40px; /* Adjust this to whatever height fits your design */
-    width: auto; /* This ensures the aspect ratio of the icon remains intact */
-}
-
-/* YouTube specific icon */
-.link-icon[src*="yt-icon"] {
-    max-height: 40px; /* Adjust this to your preferred height */
+    max-height: 40px;
     width: auto;
 }
-
 /* Optional: Styling for the links in the list */
 #links a {
     display: flex;
