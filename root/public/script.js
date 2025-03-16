@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const logoInput = document.getElementById("logoUrl");
     const logoElement = document.getElementById("logo");
     const addLinkHeaderButton = document.getElementById("add-link-header");
+    const logoAboveSearchDiv = document.geetElementById("")
 
     let config;
     fetch('config.json')
