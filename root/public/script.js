@@ -14,7 +14,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const logoInput = document.getElementById("logoUrl");
     const logoElement = document.getElementById("logo");
     const addLinkHeaderButton = document.getElementById("add-link-header");
-    const logoAboveSearchDiv = document.getElementById("logoAboveSearchDiv"); // This is the variable referencing the div
+    const logoAboveSearchDiv = document.getElementById("logoAboveSearchDiv");
+    const clockToggle = document.getElementById('clock-toggle');
+    const weatherToggle = document.getElementById('weather-toggle');
+    const spotifyToggle = document.getElementById('spotify-toggle');
 
     let config;
 
@@ -141,6 +144,47 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 }
             });
+        }
+
+        // Toggle visibility of widgets based on checkbox status
+        if (clockToggle) {
+            clockToggle.addEventListener('change', () => {
+                if (clockElement) {
+                    clockElement.style.display = clockToggle.checked ? 'block' : 'none';
+                }
+            });
+            // Set initial state based on config or default
+            clockElement.style.display = clockToggle.checked ? 'block' : 'none';
+        }
+
+        // Assuming weather and Spotify widgets are defined elsewhere in your HTML.
+        // Handle visibility for weather and Spotify similarly
+        if (weatherToggle) {
+            weatherToggle.addEventListener('change', () => {
+                const weatherWidget = document.getElementById('weather-widget'); // Replace with actual weather widget id
+                if (weatherWidget) {
+                    weatherWidget.style.display = weatherToggle.checked ? 'block' : 'none';
+                }
+            });
+            // Set initial state for weather widget
+            const weatherWidget = document.getElementById('weather-widget');
+            if (weatherWidget) {
+                weatherWidget.style.display = weatherToggle.checked ? 'block' : 'none';
+            }
+        }
+
+        if (spotifyToggle) {
+            spotifyToggle.addEventListener('change', () => {
+                const spotifyWidget = document.getElementById('spotify-widget'); // Replace with actual Spotify widget id
+                if (spotifyWidget) {
+                    spotifyWidget.style.display = spotifyToggle.checked ? 'block' : 'none';
+                }
+            });
+            // Set initial state for Spotify widget
+            const spotifyWidget = document.getElementById('spotify-widget');
+            if (spotifyWidget) {
+                spotifyWidget.style.display = spotifyToggle.checked ? 'block' : 'none';
+            }
         }
     }
 
