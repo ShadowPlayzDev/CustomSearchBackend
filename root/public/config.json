@@ -2,7 +2,7 @@
     "greeting": "Welcome!",
     "links": [
         { "name": "Google", "url": "https://www.google.com", "icon": "m:search" },
-        { "name": "GitHub", "url": "https://github.com", "icon": "m:code" },
+        { "name": "GitHub", "url": "https://github.com", "icon": "l:https://github.githubassets.com/favicons/favicon-dark.png" },
         { "name": "YouTube", "url": "https://www.youtube.com", "icon": "l:https://www.youtube.com/s/desktop/ee47b5e0/img/logos/favicon.ico" }
     ],
     "searchEngines": [
