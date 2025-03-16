@@ -16,8 +16,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const addLinkHeaderButton = document.getElementById("add-link-header");
 
     let config;
-
-    // Load configuration from file
     fetch('config.json')
         .then(response => {
             if (!response.ok) {
@@ -31,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .catch(error => {
             console.error('Error loading config.json:', error);
-            alert("Error loading configuration, using Default Configuration.")
+            // Fallback to the default JS config if the fetch fails
             config = {
                 greeting: 'Welcome!',
                 links: [
@@ -60,8 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         greetingElement.textContent = config.greeting;
 
-        // Clear and render links
-        linksElement.innerHTML = '';
+        linksElement.innerHTML = ''; // Clear the previous links
         config.links.forEach(link => {
             const a = document.createElement('a');
             a.href = link.url;
@@ -105,7 +102,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         // Apply theme
-        document.body.classList.toggle('dark-mode', config.theme === 1);
+        if (config.theme === 1) {
+            document.body.classList.add('dark-mode');
+        } else {
+            document.body.classList.remove('dark-mode');
+        }
 
         // Apply other settings
         searchInput.placeholder = config.searchPlaceholder;
@@ -118,10 +119,13 @@ document.addEventListener('DOMContentLoaded', () => {
         searchButtonTextInput.value = config.searchButtonText;
         logoInput.value = config.logoUrl;
 
-        document.body.classList.toggle('centered-logo-layout', config.centeredLogo);
+        if (config.centeredLogo) {
+            document.body.classList.add('centered-logo-layout');
+        } else {
+            document.body.classList.remove('centered-logo-layout');
+        }
     }
 
-    // Load settings from URL parameters
     function loadSettingsFromUrlParams() {
         const urlParams = new URLSearchParams(window.location.search);
         const themeParam = urlParams.get('t');
@@ -168,7 +172,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     loadSettingsFromUrlParams();
 
-    // Handle search
     searchButton.addEventListener('click', () => {
         const query = searchInput.value;
         if (query) {
@@ -176,7 +179,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Update the clock
     function updateClock() {
         const now = new Date();
         let hours = now.getHours();
@@ -191,7 +193,6 @@ document.addEventListener('DOMContentLoaded', () => {
     updateClock();
     setInterval(updateClock, 1000);
 
-    // Toggle settings sidebar
     settingsSidebar.classList.remove('open');
 
     settingsToggle.addEventListener('click', () => {
