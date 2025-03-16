@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const logoInput = document.getElementById("logoUrl");
     const logoElement = document.getElementById("logo");
     const addLinkHeaderButton = document.getElementById("add-link-header");
-    const logoAboveSearchDiv = document.geetElementById("logoAboveSearchDivId")
+    const logoAboveSearchDiv = document.getElementById("logoAboveSearchDiv"); // This is the variable referencing the div
 
     let config;
     fetch('config.json')
@@ -86,7 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Add a button to add new links
         const addButton = document.createElement('button');
         addButton.id = 'add-link';
-        addButton.innerHTML = '<i class="material-icons">add_link</i>';
+        addButton.innerHTML = '<i class="material-icons">add</i>';
         linksElement.appendChild(addButton);
 
         addButton.addEventListener('click', () => {
@@ -118,7 +118,19 @@ document.addEventListener('DOMContentLoaded', () => {
         searchPlaceholderInput.value = config.searchPlaceholder;
         searchButtonTextInput.value = config.searchButtonText;
         logoInput.value = config.logoUrl;
-        
+
+        // Update icon preview when the logo input value changes
+        logoInput.addEventListener('input', () => {
+            const logoUrl = logoInput.value;
+            if (logoUrl) {
+                // Using the variable `logoAboveSearchDiv` to show the icon preview
+                logoAboveSearchDiv.innerHTML = `<img src="${logoUrl}" alt="Logo Preview" class="logo-preview">`;
+            } else {
+                logoAboveSearchDiv.innerHTML = ''; // Clear the preview if no URL is entered
+            }
+        });
+    }
+
     function loadSettingsFromUrlParams() {
         const urlParams = new URLSearchParams(window.location.search);
         const themeParam = urlParams.get('t');
@@ -126,7 +138,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const placeholderParam = urlParams.get('sp');
         const buttonTextParam = urlParams.get('bt');
         const logoParam = urlParams.get('l');
-        const logoAboveSearch = urlParams.get('las')
 
         if (themeParam !== null && !isNaN(themeParam)) {
             const theme = parseInt(themeParam, 10);
