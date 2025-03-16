@@ -12,7 +12,7 @@ body {
     flex-direction: column;
     height: 100vh;
     background-color: #f0f0f0;
-    transition: background-color 0.3s, color 0.3s, background-image 0.3s;
+    transition: background-color 0.3s, color 0.3s;
 }
 
 /* Light Theme */
@@ -27,8 +27,7 @@ body.theme-dark {
 }
 
 body.theme-custom {
-    background-image: url(''); /* Dynamically set via JS */
-    background-size: cover;
+    background-color: #f0f0f0;
     color: #fff;
 }
 
@@ -191,30 +190,22 @@ body.dark-mode #links a:hover {
     background-color: #333;
 }
 
-/* Widgets - Clock, Weather, Spotify */
-#clock-widget {
-    text-align: center;
-    margin-top: 20px;
-}
-
-#weather-widget {
-    text-align: center;
-    margin-top: 20px;
-}
-
+/* Widgets Section */
+#clock-widget,
+#weather-widget,
 #spotify-widget {
-    text-align: center;
+    display: block;
     margin-top: 20px;
+    text-align: center;
 }
 
-/* Custom Widgets - Controlled via URL */
 #clock-widget.hidden,
 #weather-widget.hidden,
 #spotify-widget.hidden {
     display: none;
 }
 
-/* Settings Section (Widget Toggles) */
+/* Widget Toggles - Checkboxes */
 .settings-section {
     margin-bottom: 20px;
 }
@@ -224,7 +215,6 @@ body.dark-mode #links a:hover {
     margin-bottom: 8px;
 }
 
-/* Widget Toggles - Checkboxes */
 .settings-section input[type="checkbox"] {
     margin-right: 8px;
 }
