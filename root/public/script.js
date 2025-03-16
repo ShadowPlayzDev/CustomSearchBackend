@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 searchEngine: 0,
                 searchPlaceholder: 'Search...',
                 searchButtonText: 'Go',
-                logoUrl: '/img/logo.png',
+                logoUrl: '/img/logo',
             };
             applyConfig(); // Apply the default configuration
         });
