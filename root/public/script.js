@@ -1,4 +1,67 @@
-function applyConfig() {
+document.addEventListener('DOMContentLoaded', () => {
+    const greetingElement = document.getElementById('greeting');
+    const linksElement = document.getElementById('links');
+    const searchInput = document.getElementById('searchInput');
+    const searchButton = document.getElementById('searchButton');
+    const clockElement = document.getElementById('clock');
+    const settingsSidebar = document.getElementById('settings-sidebar');
+    const settingsToggle = document.getElementById('settings-toggle');
+    const themeSelect = document.getElementById('theme');
+    const searchEngineSelect = document.getElementById('searchEngine');
+    const applySettingsButton = document.getElementById('applySettings');
+    const searchPlaceholderInput = document.getElementById('searchPlaceholder');
+    const searchButtonTextInput = document.getElementById('searchButtonText');
+    const logoInput = document.getElementById("logoUrl");
+    const logoElement = document.getElementById("logo");
+    const addLinkHeaderButton = document.getElementById("add-link-header");
+    const logoAboveSearchDiv = document.getElementById("logoAboveSearchDiv");
+
+    const clockToggle = document.getElementById('clock-toggle');
+    const weatherToggle = document.getElementById('weather-toggle');
+    const spotifyToggle = document.getElementById('spotify-toggle');
+
+    let config;
+
+    fetch('config.json')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to load config.json');
+            }
+            return response.json();
+        })
+        .then(data => {
+            config = data;
+            applyConfig();
+        })
+        .catch(error => {
+            console.error('Error loading config.json:', error);
+            config = {
+                greeting: 'Welcome!',
+                links: [
+                    { name: 'Google', url: 'https://www.google.com', icon: 'm:search' },
+                    { name: 'GitHub', url: 'https://github.com', icon: 'l:https://github.githubassets.com/favicons/favicon-dark.png' },
+                    { name: 'Youtube', url: 'https://www.youtube.com', icon: 'l:https://www.youtube.com/s/desktop/ee47b5e0/img/logos/favicon.ico' }
+                ],
+                searchEngines: [
+                    'https://www.google.com/search?q=',
+                    'https://www.bing.com/search?q=',
+                    'https://duckduckgo.com/?q=',
+                    'https://yandex.com/search/?text='
+                ],
+                theme: 0,
+                searchEngine: 0,
+                searchPlaceholder: 'Search...',
+                searchButtonText: 'Go',
+                logoUrl: '/img/logo.png',
+                centeredLogo: false,
+                showClock: true,
+                showWeather: true,
+                showSpotify: true,
+            };
+            applyConfig();
+        });
+
+    function applyConfig() {
         if (!config) return;
 
         greetingElement.textContent = config.greeting;
@@ -62,7 +125,7 @@ function applyConfig() {
         } else {
             clockElement.style.display = 'none';
         }
-        //Add Weather and Spotify Elements to HTML before enabling.
+
         const weatherElement = document.getElementById("weather");
         if(weatherElement){
           if (config.showWeather) {
@@ -71,6 +134,7 @@ function applyConfig() {
               weatherElement.style.display = 'none';
           }
         }
+
         const spotifyElement = document.getElementById("spotify");
         if(spotifyElement){
           if (config.showSpotify) {
@@ -95,3 +159,70 @@ function applyConfig() {
         weatherToggle.checked = config.showWeather;
         spotifyToggle.checked = config.showSpotify;
     }
+
+    function loadSettingsFromUrlParams() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const themeParam = urlParams.get('t');
+        const searchEngineParam = urlParams.get('se');
+        const placeholderParam = urlParams.get('sp');
+        const buttonTextParam = urlParams.get('bt');
+        const logoParam = urlParams.get('l');
+        const showClockParam = urlParams.get('sc');
+        const showWeatherParam = urlParams.get('sw');
+        const showSpotifyParam = urlParams.get('ss');
+
+        if (themeParam !== null && !isNaN(themeParam)) {
+            const theme = parseInt(themeParam, 10);
+            if (theme === 0 || theme === 1) {
+                config.theme = theme;
+            }
+        }
+
+        if (searchEngineParam !== null && !isNaN(searchEngineParam)) {
+            const searchEngine = parseInt(searchEngineParam, 10);
+            if (searchEngine >= 0 && searchEngine < config.searchEngines.length) {
+                config.searchEngine = searchEngine;
+            }
+        }
+
+        if (placeholderParam !== null) {
+            config.searchPlaceholder = placeholderParam;
+        }
+
+        if (buttonTextParam !== null) {
+            config.searchButtonText = buttonTextParam;
+        }
+
+        if (logoParam !== null) {
+            config.logoUrl = logoParam;
+        }
+
+        if (showClockParam !== null) {
+            config.showClock = showClockParam === 'true';
+        }
+
+        if (showWeatherParam !== null) {
+            config.showWeather = showWeatherParam === 'true';
+        }
+
+        if (showSpotifyParam !== null) {
+            config.showSpotify = showSpotifyParam === 'true';
+        }
+
+        applyConfig();
+    }
+
+    loadSettingsFromUrlParams();
+
+    searchButton.addEventListener('click', () => {
+        const query = searchInput.value;
+        if (query) {
+            window.location.href = config.searchEngines[config.searchEngine] + encodeURIComponent(query);
+        }
+    });
+
+    function updateClock() {
+        const now = new Date();
+        let hours = now.getHours();
+        const minutes = now.getMinutes();
+        const ampm = hours
