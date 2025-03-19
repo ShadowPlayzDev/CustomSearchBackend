@@ -1,0 +1,39 @@
+body {
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  transition: margin-left 0.3s ease;
+}
+
+#app {
+  display: flex;
+}
+
+/* Sidebar Styles */
+.sidebar {
+  width: 300px; /* Increased for a modern look */
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: #1e1e1e;
+  color: white;
+  padding: 20px;
+  transition: transform 0.3s ease;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.logo-toggle {
+  margin-right: 10px;
+}
+
+.sidebar-content ul {
+  list-style-type: none;
+ 
