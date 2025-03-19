@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Tab</title>
+    <link rel="stylesheet" href="/v2/style.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+    <div id="header">
+        <img id="logo" src="/img/logo" alt="Logo">
+        <button id="settings-toggle"><i class="material-icons">settings</i></button>
+    </div>
+    <div id="content">
+        <div id="logoAboveSearchDivId"></div>
+        <h1 id="greeting"></h1>
+        <div id="search">
+            <input type="text" id="searchInput" placeholder="Search...">
+            <button id="searchButton">Go</button>
+        </div>
+        <div id="links">
+            <button id="add-link">
+                <i class="material-icons">add</i>
+            </button>
+        </div>
+        <div id="clock"></div>
+    </div>
+    
+    <div id="settings-sidebar">
+        <h2>Settings</h2>
+        <!-- Tabs for Import and Settings -->
+        <div class="tabs">
+            <button id="importTab" class="tab-button active">Import</button>
+            <button id="settingsTab" class="tab-button">Settings</button>
+        </div>
+
+        <!-- Import Tab -->
+        <div id="importTabContent" class="tab-content">
+            <label for="importUrl">Import Config URL (must end in config.json):</label>
+            <input type="text" id="importUrl" placeholder="https://example.com/config.json">
+            <button id="importConfig">Import</button>
+        </div>
+
+        <!-- Settings Tab -->
+        <div id="settingsTabContent" class="tab-content">
+            <!-- Appearance Tab -->
+            <div class="settings-box">
+                <label for="theme">Theme:</label>
+                <select id="theme">
+                    <option value="0">Light</option>
+                    <option value="1">Dark</option>
+                </select>
+            </div>
+            <!-- Layout Tab -->
+            <div class="settings-box">
+                <label for="logoUrl">Logo URL:</label>
+                <input type="text" id="logoUrl" value="/img/logo">
+            </div>
+            <!-- Search Tab -->
+            <div class="settings-box">
+                <label for="searchEngine">Search Engine:</label>
+                <select id="searchEngine">
+                    <option value="0">Google</option>
+                    <option value="1">Bing</option>
+                    <option value="2">DuckDuckGo</option>
+                    <option value="3">Yandex</option>
+                </select>
+            </div>
+            <div class="settings-box">
+                <label for="searchPlaceholder">Search Placeholder:</label>
+                <input type="text" id="searchPlaceholder" value="Search...">
+            </div>
+            <div class="settings-box">
+                <label for="searchButtonText">Search Button Text:</label>
+                <input type="text" id="searchButtonText" value="Go">
+            </div>
+            <!-- Contributors Tab -->
+            <div id="contributors" class="settings-box">
+                <h3>Contributors</h3>
+                <p>NewTab Pro v1.0</p>
+                <p>Built with ❤️ by NewTab Pro</p>
+                <footer>
+                    <a href="https://github.com">Source</a> | <a href="#">Beta</a> | <a href="#">Docs</a>
+                </footer>
+            </div>
+        </div>
+        <button id="applySettings">Apply</button>
+    </div>
+
+    <script src="/v2/script.js"></script>
+</body>
+</html>
