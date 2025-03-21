@@ -1,6 +1,7 @@
 {
     "rewrites": [
-        { "source": "/", "destination": "/root/public/index.html" },
+        { "source": "/legacy", "destination": "/root/public/legacy/index.html" },
         { "source": "/img/logo", "destination": "/root/public/img/logo.png" }
+        { "source": "/", "destination": "/root/public/index.html" }
     ]
 }
