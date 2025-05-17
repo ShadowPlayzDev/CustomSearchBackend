@@ -1,7 +1,7 @@
 {
+    "version": 2,
     "rewrites": [
-        { "source": "/legacy", "destination": "/root/public/legacy/index.html" },
-        { "source": "/img/logo", "destination": "/root/public/img/logo.png" }
-        { "source": "/", "destination": "/root/public/index.html" }
+        { "source": "/img/logo", "destination": "img/logo.png" },
+        { "source": "/", "destination": "index.html" }
     ]
 }
