@@ -19,10 +19,10 @@ document.addEventListener('DOMContentLoaded', () => {
     let config;
 
     // Fetch configuration from the server
-    fetch('config.json')
+    fetch('example-config.json')
         .then(response => {
             if (!response.ok) {
-                throw new Error('Failed to load config.json');
+                throw new Error('Failed to load example configuration, please try again or visit https://new-tab-pro.vercel.app/example-config.json');
             }
             return response.json();
         })
