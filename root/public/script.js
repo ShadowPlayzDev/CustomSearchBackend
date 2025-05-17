@@ -1,3 +1,5 @@
+// New Tab Configurable JS
+
 document.addEventListener('DOMContentLoaded', () => {
     const greetingElement = document.getElementById('greeting');
     const linksElement = document.getElementById('links');
@@ -13,26 +15,43 @@ document.addEventListener('DOMContentLoaded', () => {
     const searchButtonTextInput = document.getElementById('searchButtonText');
     const logoInput = document.getElementById("logoUrl");
     const logoElement = document.getElementById("logo");
-    const addLinkHeaderButton = document.getElementById("add-link-header");
-    const logoAboveSearchDiv = document.getElementById("logoAboveSearchDiv"); // This is the variable referencing the div
+    const logoAboveSearchDiv = document.getElementById("logoAboveSearchDivId");
 
     let config;
 
-    // Fetch configuration from the server
-    fetch('example-config.json')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Failed to load example configuration, please try again or visit https://new-tab-pro.vercel.app/example-config.json');
+    // Load config from URL parameter or fallback
+    function loadSettingsFromUrlParams() {
+        const urlParams = new URLSearchParams(window.location.search);
+
+        const configParam = urlParams.get('config');
+        if (configParam) {
+            try {
+                // Attempt base64 decode
+                const decoded = atob(configParam);
+                config = JSON.parse(decoded);
+                applyConfig();
+                return;
+            } catch (e) {
+                // Not base64, try fetching as URL
+                fetch(configParam)
+                    .then(res => res.json())
+                    .then(data => {
+                        config = data;
+                        applyConfig();
+                    })
+                    .catch(() => console.error("Failed to load config from URL or decode base64."));
+                return;
             }
-            return response.json();
-        })
-        .then(data => {
-            config = data;
-            applyConfig(); // Apply the loaded configuration
-        })
-        .catch(error => {
-            console.error('Error loading config.json:', error);
-            // Fallback to the default JS config if the fetch fails
+        }
+
+        // Legacy param support
+        const themeParam = urlParams.get('t');
+        const searchEngineParam = urlParams.get('se');
+        const placeholderParam = urlParams.get('sp');
+        const buttonTextParam = urlParams.get('bt');
+        const logoParam = urlParams.get('l');
+
+        if (!config) {
             config = {
                 greeting: 'Welcome!',
                 links: [
@@ -52,194 +71,78 @@ document.addEventListener('DOMContentLoaded', () => {
                 searchButtonText: 'Go',
                 logoUrl: '/img/logo.png',
             };
-            applyConfig(); // Apply the default configuration
-        });
+        }
 
-    // Apply the configuration to the page
+        if (themeParam !== null && !isNaN(themeParam)) config.theme = parseInt(themeParam);
+        if (searchEngineParam !== null && !isNaN(searchEngineParam)) config.searchEngine = parseInt(searchEngineParam);
+        if (placeholderParam !== null) config.searchPlaceholder = placeholderParam;
+        if (buttonTextParam !== null) config.searchButtonText = buttonTextParam;
+        if (logoParam !== null) config.logoUrl = logoParam;
+
+        applyConfig();
+    }
+
     function applyConfig() {
         if (!config) return;
 
-        // Set greeting message
         if (greetingElement) greetingElement.textContent = config.greeting;
 
-        // Update links
         if (linksElement) {
-            linksElement.innerHTML = ''; // Clear the previous links
+            linksElement.innerHTML = '';
             config.links.forEach(link => {
                 const a = document.createElement('a');
                 a.href = link.url;
                 let iconHtml = '';
-
-                // Handle Material icons
-                if (link.icon && link.icon.startsWith('m:')) {
-                    const iconName = link.icon.substring(2);  // Remove 'm:' from the icon name
-                    iconHtml = `<i class="material-icons">${iconName}</i>`;
-                }
-                // Handle Link-based icons (image URLs)
-                else if (link.icon && link.icon.startsWith('l:')) {
-                    const iconUrl = link.icon.substring(2);  // Remove 'l:' from the link
-                    iconHtml = `<img src="${iconUrl}" alt="Link Icon" class="link-icon">`;
-                }
-                // Default to a generic link icon
-                else {
+                if (link.icon?.startsWith('m:')) {
+                    iconHtml = `<i class="material-icons">${link.icon.substring(2)}</i>`;
+                } else if (link.icon?.startsWith('l:')) {
+                    iconHtml = `<img src="${link.icon.substring(2)}" alt="icon" class="link-icon">`;
+                } else {
                     iconHtml = '<i class="material-icons">link</i>';
                 }
-
                 a.innerHTML = `${iconHtml} ${link.name}`;
                 linksElement.appendChild(a);
             });
 
-            // Add a button to add new links
             const addButton = document.createElement('button');
             addButton.id = 'add-link';
             addButton.innerHTML = '<i class="material-icons">add</i>';
             linksElement.appendChild(addButton);
 
             addButton.addEventListener('click', () => {
-                const newLinkName = prompt('Enter link name:');
-                const newLinkUrl = prompt('Enter link URL:');
-                const newLinkIcon = prompt('Enter link icon (m:material or l:url):');
-
-                if (newLinkName && newLinkUrl) {
-                    config.links.push({ name: newLinkName, url: newLinkUrl, icon: newLinkIcon || 'm:link' });
+                const name = prompt('Link name:');
+                const url = prompt('Link URL:');
+                const icon = prompt('Icon (m: or l:):');
+                if (name && url) {
+                    config.links.push({ name, url, icon: icon || 'm:link' });
                     applyConfig();
                     updateURL();
                 }
             });
         }
 
-        // Apply theme
-        if (config.theme === 1) {
-            document.body.classList.add('dark-mode');
-        } else {
-            document.body.classList.remove('dark-mode');
-        }
+        if (config.theme === 1) document.body.classList.add('dark-mode');
+        else document.body.classList.remove('dark-mode');
 
-        // Apply other settings
         if (searchInput) searchInput.placeholder = config.searchPlaceholder;
         if (searchButton) searchButton.textContent = config.searchButtonText;
         if (logoElement) logoElement.src = config.logoUrl;
 
-        if (themeSelect) themeSelect.value = config.theme;
-        if (searchEngineSelect) searchEngineSelect.value = config.searchEngine;
-        if (searchPlaceholderInput) searchPlaceholderInput.value = config.searchPlaceholder;
-        if (searchButtonTextInput) searchButtonTextInput.value = config.searchButtonText;
-        if (logoInput) logoInput.value = config.logoUrl;
+        themeSelect.value = config.theme;
+        searchEngineSelect.value = config.searchEngine;
+        searchPlaceholderInput.value = config.searchPlaceholder;
+        searchButtonTextInput.value = config.searchButtonText;
+        logoInput.value = config.logoUrl;
 
-        // Update icon preview when the logo input value changes
         if (logoInput) {
             logoInput.addEventListener('input', () => {
-                const logoUrl = logoInput.value;
-                if (logoUrl) {
-                    // Using the variable `logoAboveSearchDiv` to show the icon preview
-                    if (logoAboveSearchDiv) {
-                        logoAboveSearchDiv.innerHTML = `<img src="${logoUrl}" alt="Logo Preview" class="logo-preview">`;
-                    }
-                } else {
-                    if (logoAboveSearchDiv) {
-                        logoAboveSearchDiv.innerHTML = ''; // Clear the preview if no URL is entered
-                    }
-                }
+                if (logoAboveSearchDiv)
+                    logoAboveSearchDiv.innerHTML = logoInput.value ? `<img src="${logoInput.value}" class="logo-preview">` : '';
             });
         }
     }
 
-    // Load settings from URL params
-    function loadSettingsFromUrlParams() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const themeParam = urlParams.get('t');
-        const searchEngineParam = urlParams.get('se');
-        const placeholderParam = urlParams.get('sp');
-        const buttonTextParam = urlParams.get('bt');
-        const logoParam = urlParams.get('l');
-
-        if (themeParam !== null && !isNaN(themeParam)) {
-            const theme = parseInt(themeParam, 10);
-            if (theme === 0 || theme === 1) {
-                config.theme = theme;
-            }
-        }
-
-        if (searchEngineParam !== null && !isNaN(searchEngineParam)) {
-            const searchEngine = parseInt(searchEngineParam, 10);
-            if (searchEngine >= 0 && searchEngine < config.searchEngines.length) {
-                config.searchEngine = searchEngine;
-            }
-        }
-
-        if (placeholderParam !== null) {
-            config.searchPlaceholder = placeholderParam;
-        }
-
-        if (buttonTextParam !== null) {
-            config.searchButtonText = buttonTextParam;
-        }
-
-        if (logoParam !== null) {
-            config.logoUrl = logoParam;
-        }
-        applyConfig();
-    }
-
-    loadSettingsFromUrlParams();
-
-    if (searchButton) {
-        searchButton.addEventListener('click', () => {
-            const query = searchInput.value;
-            if (query) {
-                window.location.href = config.searchEngines[config.searchEngine] + encodeURIComponent(query);
-            }
-        });
-    }
-
-    // Update clock every second
-    function updateClock() {
-        const now = new Date();
-        let hours = now.getHours();
-        const minutes = now.getMinutes();
-        const ampm = hours >= 12 ? 'PM' : 'AM';
-        hours %= 12;
-        hours = hours ? hours : 12;
-        const timeString = `${hours}:${minutes.toString().padStart(2, '0')} ${ampm}`;
-        if (clockElement) clockElement.textContent = timeString;
-    }
-
-    updateClock();
-    setInterval(updateClock, 1000);
-
-    if (settingsSidebar) settingsSidebar.classList.remove('open');
-
-    if (settingsToggle) {
-        settingsToggle.addEventListener('click', () => {
-            if (settingsSidebar) settingsSidebar.classList.toggle('open');
-        });
-    }
-
-    document.addEventListener('click', (event) => {
-        if (settingsSidebar && !settingsSidebar.contains(event.target) && event.target !== settingsToggle && event.target !== addLinkHeaderButton) {
-            if (settingsSidebar) settingsSidebar.classList.remove('open');
-        }
-    });
-
-    if (applySettingsButton) {
-        applySettingsButton.addEventListener('click', () => {
-            if (!config) return;
-
-            config.theme = parseInt(themeSelect.value, 10);
-            config.searchEngine = parseInt(searchEngineSelect.value, 10);
-            config.searchPlaceholder = searchPlaceholderInput.value;
-            config.searchButtonText = searchButtonTextInput.value;
-            config.logoUrl = logoInput.value;
-            applyConfig();
-            if (settingsSidebar) settingsSidebar.classList.remove('open');
-            updateURL();
-        });
-    }
-
-    // Update the URL parameters
     function updateURL() {
-        if (!config) return;
-
         const newUrl = new URL(window.location.href);
         newUrl.searchParams.set("t", config.theme);
         newUrl.searchParams.set("se", config.searchEngine);
@@ -248,4 +151,82 @@ document.addEventListener('DOMContentLoaded', () => {
         newUrl.searchParams.set("l", config.logoUrl);
         window.history.replaceState({}, '', newUrl);
     }
+
+    if (searchButton) {
+        searchButton.addEventListener('click', () => {
+            const query = searchInput.value;
+            if (query) window.location.href = config.searchEngines[config.searchEngine] + encodeURIComponent(query);
+        });
+    }
+
+    function updateClock() {
+        const now = new Date();
+        let hours = now.getHours();
+        const minutes = now.getMinutes();
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12 || 12;
+        const timeString = `${hours}:${minutes.toString().padStart(2, '0')} ${ampm}`;
+        if (clockElement) clockElement.textContent = timeString;
+    }
+
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    if (settingsToggle) {
+        settingsToggle.addEventListener('click', () => {
+            settingsSidebar?.classList.toggle('open');
+        });
+    }
+
+    document.addEventListener('click', (e) => {
+        if (!settingsSidebar.contains(e.target) && e.target !== settingsToggle) {
+            settingsSidebar.classList.remove('open');
+        }
+    });
+
+    if (applySettingsButton) {
+        applySettingsButton.addEventListener('click', () => {
+            config.theme = parseInt(themeSelect.value);
+            config.searchEngine = parseInt(searchEngineSelect.value);
+            config.searchPlaceholder = searchPlaceholderInput.value;
+            config.searchButtonText = searchButtonTextInput.value;
+            config.logoUrl = logoInput.value;
+            applyConfig();
+            settingsSidebar.classList.remove('open');
+            updateURL();
+        });
+    }
+    window.toggleImportInput = function () {
+        const method = document.getElementById("importMethod").value;
+        document.getElementById("urlInputBox").classList.toggle("hidden", method !== "url");
+        document.getElementById("fileInputBox").classList.toggle("hidden", method !== "file");
+    }
+
+    window.importFromUrl = function () {
+        const url = document.getElementById("configUrl").value;
+        if (!url) return alert("Enter a valid URL.");
+        window.location.href = `?config=${encodeURIComponent(url)}`;
+    }
+
+    window.applyImportedConfig = function () {
+        const method = document.getElementById("importMethod").value;
+        if (method === "file") {
+            const fileInput = document.getElementById("configFile");
+            if (!fileInput.files.length) return alert("Please select a file.");
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                try {
+                    const json = JSON.parse(e.target.result);
+                    const base64Config = btoa(JSON.stringify(json));
+                    window.location.href = `?config=${base64Config}`;
+                } catch {
+                    alert("Invalid JSON file.");
+                }
+            };
+            reader.readAsText(file);
+        }
+    }
+
+    loadSettingsFromUrlParams();
 });
