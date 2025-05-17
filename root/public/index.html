@@ -26,49 +26,29 @@
         </div>
         <div id="clock"></div>
     </div>
-    <div id="settings-sidebar">
-        <h2>Settings</h2>
-        <div class="settings-box">
-            <label for="theme">Theme:</label>
-            <select id="theme">
-                <option value="0">Light</option>
-                <option value="1">Dark</option>
-            </select>
-        </div>
-        <div class="settings-box">
-            <label for="searchEngine">Search Engine:</label>
-            <select id="searchEngine">
-                <option value="0">Google</option>
-                <option value="1">Bing</option>
-                <option value="2">DuckDuckGo</option>
-                <option value="3">Yandex</option>
-            </select>
-        </div>
-        <div class="settings-box">
-            <label for="searchPlaceholder">Search Placeholder:</label>
-            <input type="text" id="searchPlaceholder" value="Search...">
-        </div>
-        <div class="settings-box">
-            <label for="searchButtonText">Search Button Text:</label>
-            <input type="text" id="searchButtonText" value="Go">
-        </div>
-        <div class="settings-box">
-            <label for="logoUrl">Logo URL:</label>
-            <input type="text" id="logoUrl" value="/img/logo">
-        </div>
-        <div class="settings-section">
-            <h3>Widgets</h3>
-            <label>
-                <input type="checkbox" id="clock-toggle" checked> Clock
-            </label>
-            <label>
-                 <input type="checkbox" id="weather-toggle" checked> Weather
-            </label>
-            <label>
-                <input type="checkbox" id="spotify-toggle" checked> Spotify Now Playing
-                <p>(Spotify Premium Required)</p>
-            </label>
-        </div>
+    
+    <div id="settings-sidebar"><h2>Settings</h2>
+    <div class="settings-box">
+    <h3>Configuration</h3>
+    <button onclick="window.location.href='/config-creator'">Create a configuration</button>
+    <label for="importMethod">Import:</label>
+    <select id="importMethod" onchange="toggleImportInput()">
+        <option value="">-- Select Method --</option>
+        <option value="url">URL</option>
+        <option value="file">File</option>
+    </select>
+
+    <div id="urlInputBox" class="hidden row">
+        <input type="text" id="configUrl" placeholder="Paste config URL">
+        <button onclick="importFromUrl()">IMPORT</button>
+    </div>
+
+    <div id="fileInputBox" class="hidden row">
+        <input type="file" id="configFile" accept=".json">
+    </div>
+
+    <button onclick="applyImportedConfig()">Apply Imported Config</button>
+</div>
         <button id="applySettings">Apply</button>
     </div>
     </body>
